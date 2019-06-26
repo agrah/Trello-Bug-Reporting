@@ -56,10 +56,10 @@ provider:
 
 functions:
   hello: 
-    handler: handler.hello
+    handler: bug/handler.create
     events:
       - http:
-          path: hello
+          path: bug/create
           method: POST
           cors: true
 
