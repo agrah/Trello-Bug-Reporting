@@ -20,5 +20,8 @@
   "homepage": "https://github.com/agrah/Trello-Bug-Reporting#readme",
   "devDependencies": {
     "serverless-offline": "^5.3.3"
+  },
+  "dependencies": {
+    "middy": "^0.28.2"
   }
 }
