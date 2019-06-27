@@ -1,6 +1,7 @@
 
 const request = require('request');
-const { TOKEN, KEY, LIST_ID } = require('../credentials');
+const { TOKEN, KEY } = require('../credentials');
+const { BUG_LIST_ID } = require('../global');
 
 
 //Creates the bug as a card in Trello
@@ -16,7 +17,7 @@ async function createBug(bug){
       actual result: ${bug.actual_result},
       notes: ${bug.actual_result}
       `,
-      idList: LIST_ID,
+      idList: BUG_LIST_ID,
       key: KEY,
       token: TOKEN } };
 

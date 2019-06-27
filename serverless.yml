@@ -55,7 +55,15 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  hello: 
+  initialise: 
+    handler: bug/handler.initialise
+    events:
+      - http:
+          path: bug/init
+          method: POST
+          cors: true
+
+  create_bug: 
     handler: bug/handler.create
     events:
       - http:
