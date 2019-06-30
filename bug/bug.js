@@ -57,3 +57,25 @@ async function createBug(bug){
   });
 }
 module.exports.createBug = createBug;
+
+
+//Retrieves the list of bugs in the reported list
+async function retrieveBugs(){
+  //Define the options for the request
+  const options = { method: 'GET',
+    url: `https://api.trello.com/1/lists/${BUG_LIST_ID}/cards?key=${KEY}&token=${TOKEN}`,
+    qs: {fields: 'id,name,desc,labels,url'}
+  };
+
+  //Send the request
+  return new Promise((resolve, reject) => {
+    request(options, function (error, response, body) {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(JSON.parse(body));
+      }
+    })
+  });
+}
+module.exports.retrieveBugs = retrieveBugs;

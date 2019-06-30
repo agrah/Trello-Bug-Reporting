@@ -4,7 +4,7 @@ const middy = require('middy');
 const { cors } = require('middy/middlewares');
 const Joi = require('@hapi/joi');
 
-const { createBug } = require('./bug');
+const { createBug, retrieveBugs } = require('./bug');
 const { initBoard, initList, initLabel } = require('./trello');
 const { setGlobal } = require('../utils');
 const { initSchema, createSchema } = require('./schema');
@@ -103,3 +103,26 @@ let create = async (event) => {
 }
 create = middy(create).use(cors());
 module.exports.create = create;
+
+let retrieve = async (event) => {
+  try {
+    //Retrieve the list of bugs on the reported Trello List
+    const result = await retrieveBugs();
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: `Bugs retrieved successfully!`, bugs: result
+      }),
+    };
+
+  } catch(err) {
+    return {
+      body: JSON.stringify({message: "Internal Error", error: err.message }),
+      headers: {},
+      statusCode: 500
+    };
+  }
+}
+retrieve = middy(retrieve).use(cors());
+module.exports.retrieve = retrieve;
