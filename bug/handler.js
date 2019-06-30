@@ -2,16 +2,26 @@
 
 const middy = require('middy');
 const { cors } = require('middy/middlewares');
+const Joi = require('@hapi/joi');
 
 const { createBug } = require('./bug');
 const { initBoard, initList, initLabel } = require('./trello');
 const { setGlobal } = require('../utils');
+const { initSchema, createSchema } = require('./schema');
 
 
 let initialise = async (event) => {
   try {
-    //Parse in the request body
+    //Parse in the request body and validate it
     const req = JSON.parse(event.body);
+    const { error } = Joi.validate(req, initSchema);
+    if (error){
+      return {
+        body: JSON.stringify({message: "Invalid Request", error: error.details[0].message }),
+        headers: {},
+        statusCode: 400
+      };
+    }
     
     //Create the Board and set it's ID
     const boardID = await initBoard(req.board_name);
@@ -62,8 +72,16 @@ module.exports.initialise = initialise;
 
 let create = async (event) => {
   try {
-    //Parse in the request body
+    //Parse in the request body and validate it
     const req = JSON.parse(event.body);
+    const { error } = Joi.validate(req, createSchema);
+    if (error){
+      return {
+        body: JSON.stringify({message: "Invalid Request", error: error.details[0].message }),
+        headers: {},
+        statusCode: 400
+      };
+    }
     
     //Create the bug card on Trello
     const result = await createBug(req);

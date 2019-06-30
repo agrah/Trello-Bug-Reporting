@@ -6,7 +6,7 @@ const { BUG_LIST_ID, TRIVIAL_LABEL, MINOR_LABEL, MAJOR_LABEL, CRITICAL_LABEL } =
 
 //Creates the bug as a card in Trello
 async function createBug(bug){
-  //decide which label should be chosen
+  //Set the Label ID based on the given label name
   switch( bug.label ){
     case 'critical':
       bug.labelID = CRITICAL_LABEL;
@@ -23,12 +23,21 @@ async function createBug(bug){
     default:
       throw new Error('Given label is invalid.');
   }
+
+  //Remove the notes property formatting if not provided
+  let description;
+  if (bug.notes == undefined){
+    description = `###Summary:\n${bug.summary}\n\n###Steps To Produce:\n${bug.steps_to_produce}\n\n###Expected Result:\n${bug.expected_result}\n\n###Actual Result:\n${bug.actual_result}`
+  } else {
+    description = `###Summary:\n${bug.summary}\n\n###Steps To Produce:\n${bug.steps_to_produce}\n\n###Expected Result:\n${bug.expected_result}\n\n###Actual Result:\n${bug.actual_result}\n\n###Notes:\n${bug.notes}`
+  }
   
+  //Define the options for the request
   const options = { method: 'POST',
     url: 'https://api.trello.com/1/cards',
     qs: { 
       name: `[${bug.context}] ${bug.name}`,
-      desc: `###Summary:\n${bug.summary}\n\n###Steps To Produce:\n${bug.steps_to_produce}\n\n###Expected Result:\n${bug.expected_result}\n\n###Actual Result:\n${bug.actual_result}\n\n###Notes:\n${bug.notes}`,
+      desc: description,
       idLabels: bug.labelID,
       idList: BUG_LIST_ID,
       key: KEY,
@@ -36,6 +45,7 @@ async function createBug(bug){
     }
   };
 
+  //Send the request
   return new Promise((resolve, reject) => {
     request(options, function (error, response, body) {
       if (error) {
