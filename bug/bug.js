@@ -1,5 +1,7 @@
 
 const request = require('request');
+
+const { logger } = require('../logger');
 const { TOKEN, KEY } = require('../credentials');
 const { BUG_LIST_ID, TRIVIAL_LABEL, MINOR_LABEL, MAJOR_LABEL, CRITICAL_LABEL } = require('../global');
 
