@@ -4,10 +4,10 @@ const middy = require('middy');
 const { cors } = require('middy/middlewares');
 const Joi = require('@hapi/joi');
 
-const { createBug, retrieveBugs } = require('./bug');
+const { createBug, retrieveBugs, retrieveBug, updateBug } = require('./bug');
 const { initBoard, initList, initLabel } = require('./trello');
 const { setGlobal } = require('../utils');
-const { initSchema, createSchema } = require('./schema');
+const { initSchema, createSchema, updateSchema } = require('./schema');
 const { logger } = require('../logger');
 
 
@@ -113,7 +113,7 @@ let create = async (event) => {
 create = middy(create).use(cors());
 module.exports.create = create;
 
-let retrieve = async (event) => {
+let retrieveAll = async (event) => {
   try {
     logger.info('GET /bug: Retrieving bugs...');
 
@@ -138,5 +138,102 @@ let retrieve = async (event) => {
     };
   }
 }
+retrieveAll = middy(retrieveAll).use(cors());
+module.exports.retrieveAll = retrieveAll;
+
+let retrieve = async (event) => {
+  try {
+    logger.info('GET /bug/{id}: Retrieving bug...');
+
+    //Retrieve the list of bugs on the reported Trello List
+    const result = await retrieveBug(event.pathParameters.id);
+    
+    logger.info('GET /bug/{id}: Retrieving bug complete!');
+    
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: `Bug retrieved successfully!`, bugs: result
+      }),
+    };
+
+  } catch(err) {
+    if (err.code == 400){
+      logger.warn('GET /bug/{id}: ' + err.message);
+      return {
+        body: JSON.stringify({message: err.message}),
+        headers: {},
+        statusCode: 400
+      };
+    } else if (err.code == 404) {
+      logger.warn('GET /bug/{id}: ' + err.message);
+      return {
+        body: JSON.stringify({message: err.message}),
+        headers: {},
+        statusCode: 404
+      };
+    } else {
+      logger.error('GET /bug/{id}: Internal Error Caught ', err);
+      return {
+        body: JSON.stringify({message: "Internal Error", error: err.message }),
+        headers: {},
+        statusCode: 500
+      };
+    }
+  }
+}
 retrieve = middy(retrieve).use(cors());
 module.exports.retrieve = retrieve;
+
+let update = async (event) => {
+  try {
+    logger.info('PUT /bug/{id}: Updating bug...');
+    //Parse in the request body and validate it
+    const req = JSON.parse(event.body);
+    const { error } = Joi.validate(req, updateSchema);
+    if (error){
+      return {
+        body: JSON.stringify({message: "Invalid Request", error: error.details[0].message }),
+        headers: {},
+        statusCode: 400
+      };
+    }
+    
+    //Create the bug card on Trello
+    const result = await updateBug(event.pathParameters.id, req);
+    
+    logger.info('PUT /bug/{id}: Updating bug complete!')
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: `Bug card updated with id: ${result.id}`
+      }),
+    };
+
+  } catch(err) {
+    if (err.code == 400){
+      logger.warn('PUT /bug/{id}: Bad Request, ' + err.message);
+      return {
+        body: JSON.stringify({message: err.message}),
+        headers: {},
+        statusCode: 400
+      };
+    } else if (err.code == 404) {
+      logger.warn('PUT /bug/{id}: ' + err.message);
+      return {
+        body: JSON.stringify({message: err.message}),
+        headers: {},
+        statusCode: 404
+      };
+    } else {
+      logger.error('PUT /bug/{id}: Internal Error Caught ', err);
+      return {
+        body: JSON.stringify({message: "Internal Error", error: err.message }),
+        headers: {},
+        statusCode: 500
+      };
+    }
+  }
+}
+update = middy(update).use(cors());
+module.exports.update = update;

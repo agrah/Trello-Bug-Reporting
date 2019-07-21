@@ -19,7 +19,7 @@ service: Trello-Bug-Reporting
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs10.16.0
 
 # you can overwrite defaults here
 #  stage: dev
@@ -72,12 +72,36 @@ functions:
           cors: true
   
   retrieve_bugs: 
-    handler: bug/handler.retrieve
+    handler: bug/handler.retrieveAll
     events:
       - http:
           path: bug
           method: GET
           cors: true
+
+  retrieve_bug: 
+    handler: bug/handler.retrieve
+    events:
+      - http:
+          path: bug/{id}
+          method: GET
+          cors: true
+          request: 
+            parameters:
+              paths:
+                id: true
+
+  update_bug: 
+    handler: bug/handler.update
+    events:
+      - http:
+          path: bug/{id}
+          method: PUT
+          cors: true
+          request: 
+            parameters:
+              paths:
+                id: true
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events

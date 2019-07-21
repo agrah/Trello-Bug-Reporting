@@ -16,3 +16,13 @@ module.exports.createSchema = Joi.object().keys({
   label: Joi.any().valid('critical', 'major', 'minor', 'trivial').required(),
 });
 
+module.exports.updateSchema = Joi.object().keys({
+  name: Joi.string(),
+  context: Joi.string(),
+  summary: Joi.string(),
+  steps_to_produce: Joi.string(),
+  expected_result: Joi.string(),
+  actual_result: Joi.string(),
+  notes: Joi.string(),
+  label: Joi.any().valid('critical', 'major', 'minor', 'trivial'),
+});
