@@ -64,15 +64,15 @@ functions:
           cors: true
 
   create_bug: 
-    handler: bug/handler.create
+    handler: bug/handler.create_bug
     events:
       - http:
           path: bug/create
           method: POST
           cors: true
   
-  retrieve_bugs: 
-    handler: bug/handler.retrieveAll
+  retrieve_all: 
+    handler: bug/handler.retrieve_all
     events:
       - http:
           path: bug
@@ -80,7 +80,7 @@ functions:
           cors: true
 
   retrieve_bug: 
-    handler: bug/handler.retrieve
+    handler: bug/handler.retrieve_bug
     events:
       - http:
           path: bug/{id}
@@ -92,11 +92,23 @@ functions:
                 id: true
 
   update_bug: 
-    handler: bug/handler.update
+    handler: bug/handler.update_bug
     events:
       - http:
           path: bug/{id}
           method: PUT
+          cors: true
+          request: 
+            parameters:
+              paths:
+                id: true
+
+  delete_bug: 
+    handler: bug/handler.delete_bug
+    events:
+      - http:
+          path: bug/{id}
+          method: DELETE
           cors: true
           request: 
             parameters:

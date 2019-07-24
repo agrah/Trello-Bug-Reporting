@@ -4,7 +4,7 @@ const middy = require('middy');
 const { cors } = require('middy/middlewares');
 const Joi = require('@hapi/joi');
 
-const { createBug, retrieveBugs, retrieveBug, updateBug } = require('./bug');
+const { createBug, retrieveBugs, retrieveBug, updateBug, deleteBug } = require('./bug');
 const { initBoard, initList, initLabel } = require('./trello');
 const { setGlobal } = require('../utils');
 const { initSchema, createSchema, updateSchema } = require('./schema');
@@ -77,7 +77,7 @@ let initialise = async (event) => {
 initialise = middy(initialise).use(cors());
 module.exports.initialise = initialise;
 
-let create = async (event) => {
+let create_bug = async (event) => {
   try {
     logger.info('POST /bug/create: Creating bug...');
     //Parse in the request body and validate it
@@ -110,13 +110,12 @@ let create = async (event) => {
     };
   }
 }
-create = middy(create).use(cors());
-module.exports.create = create;
+create_bug = middy(create_bug).use(cors());
+module.exports.create_bug = create_bug;
 
-let retrieveAll = async (event) => {
+let retrieve_all = async (event) => {
   try {
     logger.info('GET /bug: Retrieving bugs...');
-
     //Retrieve the list of bugs on the reported Trello List
     const result = await retrieveBugs();
 
@@ -138,14 +137,13 @@ let retrieveAll = async (event) => {
     };
   }
 }
-retrieveAll = middy(retrieveAll).use(cors());
-module.exports.retrieveAll = retrieveAll;
+retrieve_all = middy(retrieve_all).use(cors());
+module.exports.retrieve_all = retrieve_all;
 
-let retrieve = async (event) => {
+let retrieve_bug = async (event) => {
   try {
     logger.info('GET /bug/{id}: Retrieving bug...');
-
-    //Retrieve the list of bugs on the reported Trello List
+    //Retrieve the bug on the reported Trello List
     const result = await retrieveBug(event.pathParameters.id);
     
     logger.info('GET /bug/{id}: Retrieving bug complete!');
@@ -182,10 +180,10 @@ let retrieve = async (event) => {
     }
   }
 }
-retrieve = middy(retrieve).use(cors());
-module.exports.retrieve = retrieve;
+retrieve_bug = middy(retrieve_bug).use(cors());
+module.exports.retrieve_bug = retrieve_bug;
 
-let update = async (event) => {
+let update_bug = async (event) => {
   try {
     logger.info('PUT /bug/{id}: Updating bug...');
     //Parse in the request body and validate it
@@ -199,7 +197,7 @@ let update = async (event) => {
       };
     }
     
-    //Create the bug card on Trello
+    //Update the bug card on Trello
     const result = await updateBug(event.pathParameters.id, req);
     
     logger.info('PUT /bug/{id}: Updating bug complete!')
@@ -235,5 +233,47 @@ let update = async (event) => {
     }
   }
 }
-update = middy(update).use(cors());
-module.exports.update = update;
+update_bug = middy(update_bug).use(cors());
+module.exports.update_bug = update_bug;
+
+let delete_bug = async (event) => {
+  try {
+    logger.info('DELETE /bug/{id}: Deleting bug...');
+    //Delete the bug card on Trello
+    const result = await deleteBug(event.pathParameters.id);
+    
+    logger.info('DELETE /bug/{id}: Deleting bug complete!')
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: `Bug card deleted with id: ${result}`
+      }),
+    };
+
+  } catch(err) {
+    if (err.code == 400){
+      logger.warn('DELETE /bug/{id}: Bad Request, ' + err.message);
+      return {
+        body: JSON.stringify({message: err.message}),
+        headers: {},
+        statusCode: 400
+      };
+    } else if (err.code == 404) {
+      logger.warn('DELETE /bug/{id}: ' + err.message);
+      return {
+        body: JSON.stringify({message: err.message}),
+        headers: {},
+        statusCode: 404
+      };
+    } else {
+      logger.error('DELETE /bug/{id}: Internal Error Caught ', err);
+      return {
+        body: JSON.stringify({message: "Internal Error", error: err.message }),
+        headers: {},
+        statusCode: 500
+      };
+    }
+  }
+}
+delete_bug = middy(delete_bug).use(cors());
+module.exports.delete_bug = delete_bug;

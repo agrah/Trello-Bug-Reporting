@@ -165,3 +165,29 @@ async function updateBug(id, bug){
   });
 }
 module.exports.updateBug = updateBug;
+
+//Updates the bug as a card in Trello
+async function deleteBug(id){
+  //Define the options for the request
+  const options = {
+    method: 'DELETE',
+    url: `https://api.trello.com/1/cards/${id}`,
+    qs: {key: KEY, token: TOKEN}
+  }
+
+  //Send the request
+  return new Promise((resolve, reject) => {
+    request(options, function (error, response, body) {
+      if (error) {
+        reject(error);
+      } else if(response.statusCode == 400 || response.statusCode == 404){
+        reject({code: response.statusCode, message: body});
+      } else if(response.statusCode == 200){
+        resolve(id);
+      } else {
+        reject({code: response.statusCode, message: 'Strange response from Trello API'});
+      }
+    })
+  });
+}
+module.exports.deleteBug = deleteBug;
