@@ -1,10 +1,8 @@
 
 const request = require('request');
-
-const { logger } = require('../logger');
-const { TOKEN, KEY } = require('../credentials');
 const { BUG_LIST_ID, TRIVIAL_LABEL, MINOR_LABEL, MAJOR_LABEL, CRITICAL_LABEL } = require('../global');
 const { reformatBug } = require('../utils');
+const { TOKEN, KEY } = process.env;
 
 
 //Creates the bug as a card in Trello
@@ -53,8 +51,12 @@ async function createBug(bug){
     request(options, function (error, response, body) {
       if (error) {
         reject(error);
-      } else {
+      } else if(response.statusCode == 400 || response.statusCode == 404 || response.statusCode == 401){
+        reject({code: response.statusCode, message: body});
+      } else if(response.statusCode == 200){
         resolve(JSON.parse(body));
+      } else {
+        reject({code: response.statusCode, message: 'Strange response from Trello API'});
       }
     })
   });
@@ -78,8 +80,12 @@ async function retrieveBugs(){
     request(options, function (error, response, body) {
       if (error) {
         reject(error);
-      } else {
+      } else if(response.statusCode == 400 || response.statusCode == 404 || response.statusCode == 401){
+        reject({code: response.statusCode, message: body});
+      } else if(response.statusCode == 200){
         resolve(JSON.parse(body));
+      } else {
+        reject({code: response.statusCode, message: 'Strange response from Trello API'});
       }
     })
   });
@@ -103,14 +109,14 @@ async function retrieveBug(id){
     request(options, function (error, response, body) {
       if (error) {
         reject(error);
-      } else if(response.statusCode == 400 || response.statusCode == 404){
+      } else if(response.statusCode == 400 || response.statusCode == 404 || response.statusCode == 401){
         reject({code: response.statusCode, message: body});
       } else if(response.statusCode == 200){
         resolve(JSON.parse(body));
       } else {
         reject({code: response.statusCode, message: 'Strange response from Trello API'});
       }
-    });
+    })
   }); 
 }
 module.exports.retrieveBug = retrieveBug;
@@ -158,8 +164,12 @@ async function updateBug(id, bug){
     request(options, function (error, response, body) {
       if (error) {
         reject(error);
-      } else {
+      } else if(response.statusCode == 400 || response.statusCode == 404 || response.statusCode == 401){
+        reject({code: response.statusCode, message: body});
+      } else if(response.statusCode == 200){
         resolve(JSON.parse(body));
+      } else {
+        reject({code: response.statusCode, message: 'Strange response from Trello API'});
       }
     })
   });
@@ -180,10 +190,10 @@ async function deleteBug(id){
     request(options, function (error, response, body) {
       if (error) {
         reject(error);
-      } else if(response.statusCode == 400 || response.statusCode == 404){
+      } else if(response.statusCode == 400 || response.statusCode == 404 || response.statusCode == 401){
         reject({code: response.statusCode, message: body});
       } else if(response.statusCode == 200){
-        resolve(id);
+        resolve(JSON.parse(body));
       } else {
         reject({code: response.statusCode, message: 'Strange response from Trello API'});
       }

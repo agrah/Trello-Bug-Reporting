@@ -1,12 +1,12 @@
 {
   "name": "trello-bug-reporting",
   "version": "1.0.0",
-  "description": "Trello bug reporting made with Serverless",
+  "description": "Trello Bug Reporting API made with Serverless",
   "main": "handler.js",
   "scripts": {
     "dev": "serverless offline start",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy-dev": "serverless deploy --stage dev"
+    "deploy": "serverless deploy"
   },
   "repository": {
     "type": "git",

@@ -57,3 +57,21 @@ function reformatBug(oldBug, newBug){
   return formattedBug;
 }
 module.exports.reformatBug = reformatBug;
+
+//Formats the response to send back
+function response(body, code){
+  return {
+    body: JSON.stringify(body),
+    headers: {},
+    statusCode: code
+  };
+}
+module.exports.response = response;
+
+//Checks the Environment Variables are set
+function validateEnv(env){
+  if (env.KEY == undefined || env.KEY == '<TRELLO_API_KEY>' || env.TOKEN == undefined || env.TOKEN == '<TRELLO_API_TOKEN>'){
+    throw new Error('Token or Key not set in Environment Variables');
+  }
+}
+module.exports.validateEnv = validateEnv;
