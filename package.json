@@ -1,0 +1,30 @@
+{
+  "name": "trello-bug-reporting",
+  "version": "1.0.0",
+  "description": "Trello Bug Reporting API made with Serverless and Amazon AWS",
+  "main": "handler.js",
+  "scripts": {
+    "dev": "serverless offline start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "serverless deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agrah/Trello-Bug-Reporting.git"
+  },
+  "author": "agrah",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/agrah/Trello-Bug-Reporting/issues"
+  },
+  "homepage": "https://github.com/agrah/Trello-Bug-Reporting#readme",
+  "devDependencies": {
+    "serverless-offline": "^5.3.3"
+  },
+  "dependencies": {
+    "@hapi/joi": "^15.1.0",
+    "middy": "^0.28.2",
+    "request": "^2.88.0",
+    "winston": "^3.2.1"
+  }
+}

@@ -1,0 +1,112 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: Trello-Bug-Reporting
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+
+# you can overwrite defaults here
+#  stage: dev
+#  region: us-east-1
+
+  environment:
+    TOKEN: '<TRELLO_API_TOKEN>'
+    KEY: '<TRELLO_API_KEY>'
+
+# you can add packaging information here
+#package:
+#  include:
+#    - include-me.js
+#    - include-me-dir/**
+#  exclude:
+#    - exclude-me.js
+#    - exclude-me-dir/**
+
+functions:
+  initialise: 
+    handler: bug/handler.initialise
+    events:
+      - http:
+          path: bug/init
+          method: POST
+          cors: true
+
+  create_bug: 
+    handler: bug/handler.create_bug
+    events:
+      - http:
+          path: bug/create
+          method: POST
+          cors: true
+  
+  retrieve_all: 
+    handler: bug/handler.retrieve_all
+    events:
+      - http:
+          path: bug
+          method: GET
+          cors: true
+
+  retrieve_bug: 
+    handler: bug/handler.retrieve_bug
+    events:
+      - http:
+          path: bug/{id}
+          method: GET
+          cors: true
+          request: 
+            parameters:
+              paths:
+                id: true
+
+  update_bug: 
+    handler: bug/handler.update_bug
+    events:
+      - http:
+          path: bug/{id}
+          method: PUT
+          cors: true
+          request: 
+            parameters:
+              paths:
+                id: true
+
+  delete_bug: 
+    handler: bug/handler.delete_bug
+    events:
+      - http:
+          path: bug/{id}
+          method: DELETE
+          cors: true
+          request: 
+            parameters:
+              paths:
+                id: true
+
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: ApiGatewayRestApi
+
+#Plugins
+plugins:
+  - serverless-offline
