@@ -74,17 +74,17 @@ With the endpoints running locally or deployed to AWS you can perform CRUD opera
 
 **Required Fields:** 
 ```JSON
-"name": [string],
-"context": [string],
-"summary": [string],
-"steps_to_produce": [string],
-"expected_result": [string],
-"actual_result": [string],
-"label": [string / Must be "critical", "major", "minor" or "trivial"],
+"name": "[string]",
+"context": "[string]",
+"summary": "[string]",
+"steps_to_produce": "[string]",
+"expected_result": "[string]",
+"actual_result": "[string]",
+"label": "[string / Must be 'critical', 'major', 'minor' or 'trivial']"
 ```
 **Optional Fields:**
 ```JSON
-"notes": [string]
+"notes": "[string]"
 ```
 **Example Call:** 
 ```JSON
@@ -223,14 +223,14 @@ BODY: {}
 
 **Optional Fields:**
 ```JSON
-"name": [string],
-"context": [string],
-"summary": [string],
-"steps_to_produce": [string],
-"expected_result": [string],
-"actual_result": [string],
-"notes": [string],
-"label": [string / Must be "critical", "major", "minor" or "trivial"]
+"name": "[string]",
+"context": "[string]",
+"summary": "[string]",
+"steps_to_produce": "[string]",
+"expected_result": "[string]",
+"actual_result": "[string]",
+"notes": "[string]",
+"label": "[string / Must be 'critical', 'major', 'minor' or 'trivial']"
 ```
 **Example Call:** 
 ```JSON
