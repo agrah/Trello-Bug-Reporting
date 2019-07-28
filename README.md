@@ -22,8 +22,8 @@ First head over to [Trello Developers](https://developers.trello.com/) and creat
 Now set them as environment variables in the serverless config file (***serverless.yml***) by replacing the following with your newly generated Key and Token from Trello Developers.
 ```yaml
 environment:
-	TOKEN: '<TRELLO_API_TOKEN>'
-	KEY: '<TRELLO_API_KEY>'
+  TOKEN: '<TRELLO_API_TOKEN>'
+  KEY: '<TRELLO_API_KEY>'
 ```
 
 **If you only plan on running this locally then you can skip the AWS credentials step. However, you wont be able to deploy the project to AWS**
@@ -49,8 +49,10 @@ Now we need to initialise the Trello Board the bugs will be submitted too. Make 
 *If using AWS just replace localhost with the url your lambdas being hosted at*
 
 **Method:** ```POST```
+
 **URL:** ```http://localhost:3000/bug/init```
-**Body:** ``` "board_name": "Test Project Bug Reports"```
+
+**Body:** ``` "board_name": "Bug Reports"```
 
 Now everything should be set up!
 
@@ -61,10 +63,15 @@ You can now go and checkout the Bug Reporting Board that been created on your Tr
 With the endpoints running locally or deployed to AWS you can perform CRUD operations on the bugs. By using the following API calls.
 
 ## Create a Bug
+
 **Description:** Creates a Bug as a card on the Bug Reporting board.
+
 **Method:** ```POST```
+
 **URL:** ```/bug/create```
+
 **URL Parameters:** N/A 
+
 **Required Fields:** 
 ```JSON
 "name": [string],
@@ -79,7 +86,7 @@ With the endpoints running locally or deployed to AWS you can perform CRUD opera
 ```JSON
 "notes": [string]
 ```
-**Example Call** 
+**Example Call:** 
 ```JSON
 METHOD: POST,
 URL: http://localhost:3000/bug/create
@@ -109,13 +116,20 @@ BODY: {
 ```
 
 ## Retrieve a Bug
+
 **Description:** Retrieves a bug from the Bug Reporting board.
+
 **Method:** ```GET```
+
 **URL:** ```/bug/{id}```
+
 **URL Parameters:** ``` id = [bugs unique id]``` 
+
 **Required Fields:**  N/A
+
 **Optional Fields:** N/A
-**Example Call** 
+
+**Example Call:** 
 ```JSON
 METHOD: GET,
 URL: http://localhost:3000/bug/5d3d3103cd4ace724aeb2ac0
@@ -157,12 +171,18 @@ Or
 
 ## Retrieve all Bugs
 **Description:** Retrieves the list of bugs from the Bug Reporting board.
+
 **Method:** ```GET```
+
 **URL:** ```/bug```
+
 **URL Parameters:** N/A 
+
 **Required Fields:**  N/A
+
 **Optional Fields:** N/A
-**Example Call** 
+
+**Example Call:** 
 ```JSON
 METHOD: GET,
 URL: http://localhost:3000/bug
@@ -190,11 +210,17 @@ BODY: {}
 ```
 
 ## Update a Bug
+
 **Description:** Updates a Bugs card on the Bug Reporting board.
+
 **Method:** ```PUT```
+
 **URL:** ```/bug/{id}```
+
 **URL Parameters:**  ``` id = [bugs unique id]``` 
+
 **Required Fields:**  At least one of the optional fields
+
 **Optional Fields:**
 ```JSON
 "name": [string],
@@ -206,7 +232,7 @@ BODY: {}
 "notes": [string],
 "label": [string / Must be "critical", "major", "minor" or "trivial"]
 ```
-**Example Call** 
+**Example Call:** 
 ```JSON
 METHOD: PUT,
 URL: http://localhost:3000/bug/5d3d3103cd4ace724aeb2ac0
@@ -250,13 +276,20 @@ Or
 ```
 
 ## Delete a Bug
+
 **Description:** Deletes the bug from the Bug Reporting board.
+
 **Method:** ```DELETE```
+
 **URL:** ```/bug/{id}```
+
 **URL Parameters:** ``` id = [bugs unique id]``` 
+
 **Required Fields:**  N/A
+
 **Optional Fields:** N/A
-**Example Call** 
+
+**Example Call:** 
 ```JSON
 METHOD: DELETE,
 URL: http://localhost:3000/bug/5d3d3103cd4ace724aeb2ac0
