@@ -81,7 +81,7 @@ let create_bug = async (event) => {
     //Create the bug card on Trello and return it's ID
     const result = await createBug(req);
     logger.info('POST /bug/create: Creating bug complete!');
-    return response({message: `Bug card created with id: ${result.id}`}, 200);
+    return response({id: result.id}, 200);
 
   } catch(err) {
     logger.error('GET /bug/{id}: Internal Error Caught ', err);
@@ -99,7 +99,7 @@ let retrieve_all = async (event) => {
     //Retrieve the list of bugs on the reported Trello List and return them
     const result = await retrieveBugs();
     logger.info('GET /bug: Retrieving bugs complete!');
-    return response({message: `Bugs retrieved successfully!`, bugs: result}, 200);
+    return response({bugs: result}, 200);
 
   } catch(err) {
     logger.error('GET /bug: Internal Error Caught ', err);
@@ -117,7 +117,7 @@ let retrieve_bug = async (event) => {
     //Retrieve the bug on the reported Trello List and return it
     const result = await retrieveBug(event.pathParameters.id);
     logger.info('GET /bug/{id}: Retrieving bug complete!');
-    return response({message: `Bug retrieved successfully!`, bugs: result}, 200);
+    return response({bug: result}, 200);
 
   } catch(err) {
     if (err.code == 400 || err.code == 404){
@@ -147,7 +147,7 @@ let update_bug = async (event) => {
     //Update the given bug card on Trello and return it's ID
     const result = await updateBug(event.pathParameters.id, req);
     logger.info('PUT /bug/{id}: Updating bug complete!');
-    return response({message: `Bug card updated with id: ${result.id}`}, 200);
+    return response({id: result.id}, 200);
 
   } catch(err) {
     if (err.code == 400 || err.code == 404){
@@ -170,7 +170,7 @@ let delete_bug = async (event) => {
     //Delete the bug card on Trello
     const result = await deleteBug(event.pathParameters.id);
     logger.info('DELETE /bug/{id}: Deleting bug complete!');
-    return response({message: `Bug card deleted with id: ${result}`}, 200);
+    return response({id: result}, 200);
 
   } catch(err) {
     if (err.code == 400 || err.code == 404){

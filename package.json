@@ -1,7 +1,7 @@
 {
   "name": "trello-bug-reporting",
   "version": "1.0.0",
-  "description": "Trello Bug Reporting API made with Serverless",
+  "description": "Trello Bug Reporting API made with Serverless and Amazon AWS",
   "main": "handler.js",
   "scripts": {
     "dev": "serverless offline start",
@@ -13,7 +13,7 @@
     "url": "git+https://github.com/agrah/Trello-Bug-Reporting.git"
   },
   "author": "agrah",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/agrah/Trello-Bug-Reporting/issues"
   },
