@@ -1,6 +1,6 @@
 
 const request = require('request');
-const { TOKEN, KEY } = require('../credentials');
+const { TOKEN, KEY } = process.env;
 
 //Creates the Board
 async function initBoard(name){
