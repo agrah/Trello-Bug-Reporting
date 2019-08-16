@@ -1,7 +1,7 @@
 
 # Trello Bug Reporting
 
-A [Serverless](https://serverless.com/) service which allows you to perform basic CRUD operations on reported Bugs which are accessible through a Trello Bug Reporting Board. This service has been configured to be deployed through Amazon AWS.
+A [Serverless](https://serverless.com/) RESTful API service which allows you to perform basic CRUD operations on reported Bugs which are accessible through a Trello Bug Reporting Board. This service has been configured to be deployed through Amazon AWS.
 
 ## Installation
 First clone the repo with
